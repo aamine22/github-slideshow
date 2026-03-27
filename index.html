@@ -1,13 +1,854 @@
----
-layout: presentation
----
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recent Africa Cars | Location de voitures premium au Maroc</title>
+  <meta name="description" content="Recent Africa Cars : location de voitures premium au Maroc avec réservation rapide, livraison aéroport/hôtel et assistance 24/7." />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-alt: #101a30;
+      --card: #121f3a;
+      --text: #e8efff;
+      --muted: #a5b4d4;
+      --line: #29406f;
+      --primary: #ff7a00;
+      --primary-2: #ff9d3c;
+      --ok: #2ad4a7;
+      --radius: 18px;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    }
 
-{% for post in site.posts reversed %}
-	{% include slide.html %}
-	<div class="page-break"></div>
-{% endfor %}
-{% unless site.simple-slideshow %}
-{% if site.overview %}
-<section id="overview" class="step" {% for attr in site.overview-data %} data-{{attr[0]}}="{{attr[1]}}"{% endfor %}></section>
-{% endif %}
-{% endunless %}
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 85% -10%, #263d72 0%, transparent 35%),
+        radial-gradient(circle at -20% 20%, #18274a 0%, transparent 30%),
+        var(--bg);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1140px, 92vw);
+      margin-inline: auto;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 18, 32, 0.78);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    .logo-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--primary), var(--primary-2));
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(255, 122, 0, 0.35);
+    }
+
+    .logo span { color: var(--primary); }
+
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 8px 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(125deg, var(--primary), var(--primary-2));
+      box-shadow: 0 10px 30px rgba(255, 122, 0, 0.3);
+    }
+
+    .btn-outline {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 28px;
+      padding: 74px 0 42px;
+      align-items: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      border: 1px solid rgba(42, 212, 167, 0.4);
+      color: #99f0da;
+      background: rgba(42,212,167,0.1);
+      margin-bottom: 14px;
+      font-size: 0.85rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4.8vw, 3.5rem);
+      line-height: 1.1;
+    }
+
+    .hero p {
+      margin: 16px 0 22px;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .stats {
+      margin-top: 22px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stats strong {
+      display: block;
+      font-size: 1.3rem;
+      color: #fff;
+    }
+
+    .hero-media {
+      min-height: 430px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: linear-gradient(rgba(10, 17, 33, 0.3), rgba(10, 17, 33, 0.65)),
+        url('https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1400&q=80') center/cover;
+      display: flex;
+      align-items: end;
+      box-shadow: var(--shadow);
+    }
+
+    .media-card {
+      margin: 14px;
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(11, 18, 32, 0.8);
+      padding: 14px;
+    }
+
+    section { padding: 30px 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+    }
+
+    .section-head p { margin: 0; color: var(--muted); }
+
+    .fleet-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .filter-btn.active {
+      border-color: transparent;
+      background: linear-gradient(125deg, var(--primary), var(--primary-2));
+      color: #fff;
+    }
+
+    .fleet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .car-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+      transition: transform .25s ease, border-color .25s ease;
+      display: grid;
+      grid-template-rows: 180px auto;
+    }
+
+    .car-card:hover {
+      transform: translateY(-4px);
+      border-color: #4467ac;
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .car-body { padding: 14px; }
+
+    .car-meta {
+      color: var(--muted);
+      font-size: 0.87rem;
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin: 8px 0 12px;
+    }
+
+    .car-price {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .car-price strong {
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .advantages {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .adv {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+
+    .adv h3 { margin: 8px 0 4px; font-size: 1rem; }
+    .adv p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .adv .n {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: rgba(255, 122, 0, 0.14);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .booking {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: 1.1fr 1fr;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.02);
+      padding: 16px;
+    }
+
+    form { display: grid; gap: 12px; }
+
+    .grid-2 {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .field { display: grid; gap: 6px; }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border-radius: 11px;
+      border: 1px solid var(--line);
+      padding: 11px 12px;
+      background: rgba(9, 14, 28, 0.7);
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    textarea { min-height: 95px; resize: vertical; }
+
+    .estimate {
+      border-radius: 12px;
+      border: 1px dashed rgba(255,122,0,0.5);
+      background: rgba(255,122,0,0.09);
+      padding: 12px;
+      color: #ffdcb8;
+      font-size: 0.92rem;
+    }
+
+    .testimonials {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .quote {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.018);
+      padding: 14px;
+    }
+
+    .quote p { margin-top: 0; color: #dce4ff; }
+    .quote small { color: var(--muted); }
+
+    footer {
+      margin-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 24px 0 40px;
+      color: var(--muted);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.93rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .booking,
+      .testimonials { grid-template-columns: 1fr; }
+      .fleet-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .advantages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .menu-btn { display: inline-flex; }
+
+      .menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 4vw;
+        left: 4vw;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(11,18,32,0.96);
+        padding: 12px;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .menu.open { display: flex; }
+
+      .grid-2,
+      .fleet-grid,
+      .advantages { grid-template-columns: 1fr; }
+
+      .hero { padding-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="#accueil" aria-label="Accueil Recent Africa Cars">
+        <span class="logo-badge">RA</span>
+        <span>Recent <span>Africa Cars</span></span>
+      </a>
+
+      <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="main-menu">Menu</button>
+
+      <nav class="menu" id="main-menu" aria-label="Navigation principale">
+        <a href="#flotte">Flotte</a>
+        <a href="#avantages">Avantages</a>
+        <a href="#reservation">Réservation</a>
+        <a href="#avis">Avis clients</a>
+        <a class="btn btn-primary" href="#reservation">Réserver</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="accueil" class="container">
+    <section class="hero reveal">
+      <div>
+        <div class="chip">✅ Assistance & livraison 24h/24 dans tout le Maroc</div>
+        <h1>Votre agence <span style="color:var(--primary)">Recent Africa Cars</span> : rapide, fiable et premium</h1>
+        <p>Réservez en quelques clics une voiture adaptée à votre budget : économique, SUV ou prestige. Paiement flexible, zéro surprise et support client dédié.</p>
+        <div class="hero-actions">
+          <a href="#reservation" class="btn btn-primary">Demander un devis</a>
+          <a href="#flotte" class="btn btn-outline">Voir la flotte</a>
+        </div>
+        <div class="stats">
+          <div><strong id="count-clients">0</strong> clients satisfaits</div>
+          <div><strong id="count-cars">0</strong> véhicules récents</div>
+          <div><strong id="count-rating">0</strong> note moyenne</div>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="media-card">
+          <strong>Offre du mois</strong>
+          <p style="margin:6px 0 0;color:var(--muted)">-10% sur la première réservation + livraison gratuite à Casablanca et Marrakech.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="flotte" class="reveal">
+      <div class="section-head">
+        <div>
+          <h2>Notre flotte dynamique</h2>
+          <p>Filtrez par catégorie et choisissez le véhicule idéal pour votre séjour.</p>
+        </div>
+      </div>
+
+      <div class="fleet-toolbar" id="fleet-filters">
+        <button class="btn btn-outline filter-btn active" data-filter="all" type="button">Tous</button>
+        <button class="btn btn-outline filter-btn" data-filter="eco" type="button">Économique</button>
+        <button class="btn btn-outline filter-btn" data-filter="suv" type="button">SUV</button>
+        <button class="btn btn-outline filter-btn" data-filter="premium" type="button">Premium</button>
+      </div>
+
+      <div class="fleet-grid" id="fleet-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="avantages" class="reveal">
+      <div class="section-head">
+        <h2>Pourquoi nous choisir ?</h2>
+      </div>
+      <div class="advantages">
+        <article class="adv"><div class="n">01</div><h3>Tarifs transparents</h3><p>Aucun frais caché, tout est affiché avant validation.</p></article>
+        <article class="adv"><div class="n">02</div><h3>Voitures entretenues</h3><p>Contrôle régulier, assurance incluse et état irréprochable.</p></article>
+        <article class="adv"><div class="n">03</div><h3>Livraison flexible</h3><p>Aéroport, hôtel ou domicile selon votre planning.</p></article>
+        <article class="adv"><div class="n">04</div><h3>Support réactif</h3><p>WhatsApp et téléphone disponibles pour répondre vite.</p></article>
+      </div>
+    </section>
+
+    <section id="reservation" class="reveal">
+      <div class="section-head">
+        <div>
+          <h2>Réservation rapide</h2>
+          <p>Le prix estimatif se met à jour automatiquement selon la durée.</p>
+        </div>
+      </div>
+
+      <div class="booking">
+        <div class="card">
+          <form id="booking-form" novalidate>
+            <div class="grid-2">
+              <div class="field">
+                <label for="name">Nom complet *</label>
+                <input id="name" name="name" required placeholder="Votre nom" />
+              </div>
+              <div class="field">
+                <label for="phone">Téléphone *</label>
+                <input id="phone" name="phone" required placeholder="+212..." />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="vehicle">Véhicule *</label>
+                <select id="vehicle" name="vehicle" required></select>
+              </div>
+              <div class="field">
+                <label for="city">Ville de départ *</label>
+                <select id="city" name="city" required>
+                  <option value="Casablanca">Casablanca</option>
+                  <option value="Marrakech">Marrakech</option>
+                  <option value="Agadir">Agadir</option>
+                  <option value="Tanger">Tanger</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="pickup">Date de départ *</label>
+                <input id="pickup" name="pickup" type="date" required />
+              </div>
+              <div class="field">
+                <label for="dropoff">Date de retour *</label>
+                <input id="dropoff" name="dropoff" type="date" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="notes">Message</label>
+              <textarea id="notes" name="notes" placeholder="Besoin d'un siège bébé, GPS, chauffeur..."></textarea>
+            </div>
+
+            <div class="estimate" id="estimate">Estimation: sélectionnez vos dates et votre véhicule.</div>
+            <button class="btn btn-primary" type="submit">Envoyer sur WhatsApp</button>
+            <p id="feedback" aria-live="polite" style="margin:0;color:#9ef4df"></p>
+          </form>
+        </div>
+
+        <aside class="card">
+          <h3 style="margin-top:0">Contact direct</h3>
+          <p style="color:var(--muted)">Réponse rapide en moins de 10 minutes pendant les heures d’ouverture.</p>
+          <p>
+            📞 <strong>+212 6 12 34 56 78</strong><br />
+            ✉️ <strong>contact@recentafricacars.com</strong><br />
+            📍 Boulevard Mohammed V, Casablanca
+          </p>
+          <a class="btn btn-outline" target="_blank" rel="noreferrer" href="https://wa.me/212612345678">Ouvrir WhatsApp</a>
+        </aside>
+      </div>
+    </section>
+
+    <section id="avis" class="reveal">
+      <div class="section-head">
+        <h2>Ce que disent nos clients</h2>
+      </div>
+      <div class="testimonials" id="testimonials"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <span>© 2026 Recent Africa Cars — Tous droits réservés.</span>
+      <span>Instagram • Facebook • WhatsApp</span>
+    </div>
+  </footer>
+
+  <script>
+    const cars = [
+      {
+        name: 'Hyundai i10',
+        type: 'eco',
+        fuel: 'Essence',
+        gear: 'Manuel',
+        seats: 4,
+        dailyPrice: 27,
+        image: 'https://images.unsplash.com/photo-1611821064430-0d40291d0f0b?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Dacia Logan',
+        type: 'eco',
+        fuel: 'Diesel',
+        gear: 'Manuel',
+        seats: 5,
+        dailyPrice: 33,
+        image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Dacia Duster',
+        type: 'suv',
+        fuel: 'Diesel',
+        gear: 'Manuel',
+        seats: 5,
+        dailyPrice: 43,
+        image: 'https://images.unsplash.com/photo-1617814065893-00757125d7f4?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Kia Sportage',
+        type: 'suv',
+        fuel: 'Essence',
+        gear: 'Automatique',
+        seats: 5,
+        dailyPrice: 69,
+        image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Range Rover Evoque',
+        type: 'premium',
+        fuel: 'Essence',
+        gear: 'Automatique',
+        seats: 5,
+        dailyPrice: 119,
+        image: 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Mercedes Classe C',
+        type: 'premium',
+        fuel: 'Essence',
+        gear: 'Automatique',
+        seats: 5,
+        dailyPrice: 135,
+        image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80'
+      }
+    ];
+
+    const testimonials = [
+      { text: 'Service excellent, véhicule propre et livré à l’aéroport à l’heure.', author: 'Yassine B. — Casablanca' },
+      { text: 'Réservation fluide sur WhatsApp, prix clair, aucune surprise.', author: 'Sarah M. — Paris' },
+      { text: 'Je recommande fortement pour un roadtrip Marrakech-Agadir.', author: 'Khalid R. — Rabat' },
+      { text: 'Équipe sérieuse et très réactive, expérience premium.', author: 'Imane L. — Tanger' }
+    ];
+
+    const fleetGrid = document.getElementById('fleet-grid');
+    const filters = document.getElementById('fleet-filters');
+    const vehicleSelect = document.getElementById('vehicle');
+    const bookingForm = document.getElementById('booking-form');
+    const feedback = document.getElementById('feedback');
+    const estimate = document.getElementById('estimate');
+    const testimonialsRoot = document.getElementById('testimonials');
+    const menuBtn = document.getElementById('menu-btn');
+    const menu = document.getElementById('main-menu');
+
+    function euro(value) {
+      return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
+    }
+
+    function renderFleet(filter = 'all') {
+      const list = cars.filter(car => filter === 'all' || car.type === filter);
+      fleetGrid.innerHTML = list.map(car => `
+        <article class="car-card reveal">
+          <img src="${car.image}" alt="${car.name}" loading="lazy" />
+          <div class="car-body">
+            <strong>${car.name}</strong>
+            <div class="car-meta">
+              <span>⛽ ${car.fuel}</span><span>⚙️ ${car.gear}</span><span>👥 ${car.seats} places</span>
+            </div>
+            <div class="car-price">
+              <strong>${euro(car.dailyPrice)} / jour</strong>
+              <button class="btn btn-outline" type="button" data-pick="${car.name}">Choisir</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+      observeReveal();
+    }
+
+    function fillVehicles() {
+      vehicleSelect.innerHTML = cars.map(car => `<option value="${car.name}">${car.name} — ${euro(car.dailyPrice)}/jour</option>`).join('');
+    }
+
+    function computeEstimate() {
+      const selectedCar = cars.find(car => car.name === vehicleSelect.value) || cars[0];
+      const pickup = new Date(document.getElementById('pickup').value);
+      const dropoff = new Date(document.getElementById('dropoff').value);
+
+      if (Number.isNaN(pickup.getTime()) || Number.isNaN(dropoff.getTime())) {
+        estimate.textContent = 'Estimation: sélectionnez vos dates et votre véhicule.';
+        return null;
+      }
+
+      const dayMs = 24 * 60 * 60 * 1000;
+      const diff = Math.ceil((dropoff - pickup) / dayMs);
+      if (diff <= 0) {
+        estimate.textContent = 'La date de retour doit être postérieure à la date de départ.';
+        return null;
+      }
+
+      const total = diff * selectedCar.dailyPrice;
+      estimate.textContent = `Estimation: ${diff} jour(s) × ${euro(selectedCar.dailyPrice)} = ${euro(total)} (hors options).`;
+      return { days: diff, total, selectedCar };
+    }
+
+    function renderTestimonials() {
+      testimonialsRoot.innerHTML = testimonials.map(item => `
+        <article class="quote">
+          <p>“${item.text}”</p>
+          <small>${item.author}</small>
+        </article>
+      `).join('');
+    }
+
+    function animateCount(id, to, suffix = '') {
+      const node = document.getElementById(id);
+      let value = 0;
+      const step = Math.max(1, Math.floor(to / 70));
+      const timer = setInterval(() => {
+        value += step;
+        if (value >= to) {
+          value = to;
+          clearInterval(timer);
+        }
+        node.textContent = `${value}${suffix}`;
+      }, 20);
+    }
+
+    function observeReveal() {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll('.reveal:not(.show)').forEach(el => observer.observe(el));
+    }
+
+    filters.addEventListener('click', event => {
+      const target = event.target.closest('.filter-btn');
+      if (!target) return;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      target.classList.add('active');
+      renderFleet(target.dataset.filter);
+    });
+
+    fleetGrid.addEventListener('click', event => {
+      const btn = event.target.closest('[data-pick]');
+      if (!btn) return;
+      vehicleSelect.value = btn.dataset.pick;
+      document.getElementById('reservation').scrollIntoView({ behavior: 'smooth' });
+      computeEstimate();
+    });
+
+    ['vehicle', 'pickup', 'dropoff'].forEach(id => {
+      document.getElementById(id).addEventListener('change', computeEstimate);
+    });
+
+    bookingForm.addEventListener('submit', event => {
+      event.preventDefault();
+      feedback.textContent = '';
+
+      if (!bookingForm.checkValidity()) {
+        feedback.textContent = 'Merci de remplir tous les champs obligatoires.';
+        bookingForm.reportValidity();
+        return;
+      }
+
+      const result = computeEstimate();
+      if (!result) {
+        feedback.textContent = 'Veuillez corriger les dates sélectionnées.';
+        return;
+      }
+
+      const payload = {
+        nom: bookingForm.name.value.trim(),
+        telephone: bookingForm.phone.value.trim(),
+        vehicule: bookingForm.vehicle.value,
+        ville: bookingForm.city.value,
+        depart: bookingForm.pickup.value,
+        retour: bookingForm.dropoff.value,
+        message: bookingForm.notes.value.trim() || 'Aucune demande particulière',
+        estimation: `${result.days} jour(s), ${euro(result.total)}`
+      };
+
+      const text = encodeURIComponent(
+        `Bonjour Recent Africa Cars,%0A` +
+        `Je souhaite réserver:%0A` +
+        `Nom: ${payload.nom}%0A` +
+        `Téléphone: ${payload.telephone}%0A` +
+        `Véhicule: ${payload.vehicule}%0A` +
+        `Ville: ${payload.ville}%0A` +
+        `Dates: ${payload.depart} au ${payload.retour}%0A` +
+        `Estimation: ${payload.estimation}%0A` +
+        `Message: ${payload.message}`
+      );
+
+      feedback.textContent = 'Redirection vers WhatsApp...';
+      window.open(`https://wa.me/212612345678?text=${text}`, '_blank', 'noopener,noreferrer');
+    });
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = menu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    document.querySelectorAll('.menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    renderFleet();
+    fillVehicles();
+    computeEstimate();
+    renderTestimonials();
+    observeReveal();
+
+    animateCount('count-clients', 1200, '+');
+    animateCount('count-cars', 85, '+');
+    animateCount('count-rating', 49);
+
+    setInterval(() => {
+      const order = testimonials.splice(0, 1);
+      testimonials.push(order[0]);
+      renderTestimonials();
+    }, 6000);
+  </script>
+</body>
+</html>
